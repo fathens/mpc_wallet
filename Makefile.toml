@@ -34,7 +34,7 @@ do
     url="https://www.gstatic.com/firebasejs/${version}/firebase-${mod}.js"
     target=$dstdir/$(basename $url)
     echo "Downloading $url -> $target"
-    curl -o $target -OL $url
+    [ -f $target ] || curl -o $target -L $url
 done
 '''
 ]
