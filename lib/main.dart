@@ -27,16 +27,18 @@ Future<void> main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  // final settings = await FirebaseMessaging.instance.requestPermission(
-  //   alert: true,
-  //   announcement: false,
-  //   badge: true,
-  //   carPlay: false,
-  //   criticalAlert: false,
-  //   provisional: false,
-  //   sound: true,
-  // );
+  print("Loading FirebaseMessaging...");
+  final settings = await FirebaseMessaging.instance.requestPermission(
+    alert: true,
+    announcement: false,
+    badge: true,
+    carPlay: false,
+    criticalAlert: false,
+    provisional: false,
+    sound: true,
+  );
 
+  print("Subscribe event 'message' of window");
   window.addEventListener("message", (event) {
     print("Event $event");
   });
@@ -70,7 +72,7 @@ class InitiateKeyPage extends StatefulWidget {
 }
 
 class _InitiateKeyPageState extends State<InitiateKeyPage> {
-  // final _firebaseMessaging = FirebaseMessaging.instance;
+  final _firebaseMessaging = FirebaseMessaging.instance;
 
   String _currentDeviceId = "";
 
@@ -78,34 +80,34 @@ class _InitiateKeyPageState extends State<InitiateKeyPage> {
   void initState() {
     super.initState();
 
-    // _firebaseMessaging.getToken().then((token) {
-    //   print("Token=$token");
-    //   if (token != null) {
-    //     setState(() {
-    //       _currentDeviceId = token;
-    //     });
-    //   }
-    // });
+    _firebaseMessaging.getToken().then((token) {
+      print("Token=$token");
+      if (token != null) {
+        setState(() {
+          _currentDeviceId = token;
+        });
+      }
+    });
 
-    // FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-    //   final notification = message.notification;
-    //   print("Received: ${message.category}: ${notification?.title}: ${notification?.body}");
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      final notification = message.notification;
+      print("Received: ${message.category}: ${notification?.title}: ${notification?.body}");
 
-    //   if (notification != null && notification.android != null) {
-    //     flutterLocalNotificationsPlugin.show(
-    //         notification.hashCode,
-    //         notification.title,
-    //         notification.body,
-    //         NotificationDetails(
-    //           android: AndroidNotificationDetails(
-    //             channel.id,
-    //             channel.name,
-    //             channelDescription: channel.description,
-    //             icon: 'launch_background',
-    //           ),
-    //         ));
-    //   }
-    // });
+      if (notification != null && notification.android != null) {
+        flutterLocalNotificationsPlugin.show(
+            notification.hashCode,
+            notification.title,
+            notification.body,
+            NotificationDetails(
+              android: AndroidNotificationDetails(
+                channel.id,
+                channel.name,
+                channelDescription: channel.description,
+                icon: 'launch_background',
+              ),
+            ));
+      }
+    });
   }
 
   void _sendMessage() async {
