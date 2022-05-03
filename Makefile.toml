@@ -1,0 +1,31 @@
+[config]
+skip_core_tasks = true
+
+[tasks.build]
+description = "Build All"
+dependencies = ["build-web"]
+
+[tasks.build-web]
+dependencies = ["replace_gstatic"]
+
+[tasks.replace_gstatic]
+dependencies = ["build-chrome_extension"]
+script = [
+'''
+#!/usr/bin/env bash
+for src in build/web/*.js
+do
+    dst=${src}.replaced
+    cat $src | sed 's/https:\/\/www\.gstatic\.com/./g' > $dst
+    mv -vf $dst $src
+done
+'''
+]
+
+[tasks.build-chrome_extension]
+script = [
+'''
+#!/usr/bin/env bash
+flutter build web --web-renderer html --csp
+'''
+]
