@@ -1,6 +1,9 @@
 name: Build
 on: [push]
 
+env:
+  FLUTTER_VERSION: 2.10.5
+
 jobs:
   build:
     runs-on: ubuntu-20.04
@@ -12,6 +15,21 @@ jobs:
           toolchain: stable
 
       - uses: Swatinem/rust-cache@v1
+
+      - name: flutter cache
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: "stable"
+          cache: true
+          cache-key: flutter
+          cache-path: ${{ runner.tool_cache }}/flutter
+
+      - name: install Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: "stable"
 
       - name: Install makers
         run: cargo install cargo-make
