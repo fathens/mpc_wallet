@@ -4,6 +4,9 @@
     "version": "0.0.1",
     "permissions": [
         "activeTab",
+        "alarms",
+        "notifications",
+        "storage",
         "tabs"
     ],
     "background": {
