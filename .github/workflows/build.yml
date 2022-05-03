@@ -11,8 +11,13 @@ jobs:
         with:
           toolchain: stable
 
+      - uses: Swatinem/rust-cache@v1
+
       - name: Install makers
         run: cargo install cargo-make
 
       - name: build all
-        run: makers build
+        uses: actions-rs/cargo@v1
+        with:
+          command: make
+          args: build
