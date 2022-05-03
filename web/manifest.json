@@ -1,0 +1,26 @@
+{
+    "name": "mpc_wallet",
+    "short_name": "mpc_wallet",
+    "version": "0.0.1",
+    "permissions": [
+        "activeTab",
+        "tabs"
+    ],
+    "background": {
+        "service_worker": "./firebase-messaging-sw.js"
+    },
+    "host_permissions": [
+        "<all_urls>"
+    ],
+    "content_scripts": [
+        {
+            "matches": ["<all_urls>"],
+            "js": ["./main.dart.js"]
+        }
+    ],
+    "action": {
+        "default_popup": "index.html",
+        "default_icon": "/icons/Icon-192.png"
+    },
+    "manifest_version": 3
+}

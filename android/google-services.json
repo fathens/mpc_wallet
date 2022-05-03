@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "904340595483",
+    "project_id": "mpc-wallet-c5a4b",
+    "storage_bucket": "mpc-wallet-c5a4b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:904340595483:android:f310e5e0258bd526ca69be",
+        "android_client_info": {
+          "package_name": "org.fathens.mpcwallet"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "904340595483-p7flo5rcunhbeeg8ph1rnl4jrjqp62bj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDoXI0dPLoi77w60YdeAJWDM8r_30j_GFU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "904340595483-p7flo5rcunhbeeg8ph1rnl4jrjqp62bj.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
