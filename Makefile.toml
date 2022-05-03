@@ -9,7 +9,7 @@ dependencies = ["build-web"]
 dependencies = ["replace_gstatic"]
 
 [tasks.replace_gstatic]
-dependencies = ["build-chrome_extension"]
+dependencies = ["download-firebasejs"]
 script = [
 '''
 #!/usr/bin/env bash
@@ -18,6 +18,23 @@ do
     dst=${src}.replaced
     cat $src | sed 's/https:\/\/www\.gstatic\.com/./g' > $dst
     mv -vf $dst $src
+done
+'''
+]
+
+[tasks.download-firebasejs]
+dependencies = ["build-chrome_extension"]
+script = [
+'''
+version="8.10.1"
+dstdir="build/web/firebasejs/$version"
+mkdir -pv $dstdir
+for mod in "app" "messaging"
+do
+    url="https://www.gstatic.com/firebasejs/${version}/firebase-${mod}.js"
+    target=$dstdir/$(basename $url)
+    echo "Downloading $url -> $target"
+    curl -o $target -OL $url
 done
 '''
 ]
