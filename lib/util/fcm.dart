@@ -4,7 +4,9 @@ import 'dart:convert' show Encoding, json;
 final _postUrl = Uri.parse('https://fcm.googleapis.com/fcm/send');
 
 class PostFCM {
-  static const _serverKey = "AAAA0o7mYxs:APA91bFGE8yQfBV6HT29_E98FRyJq72AUQ0DtUbG-WZmOGOKXmElEgrO9ppBaDjYcHkJPPWiz2n1z3jElNNC1ONhPz66cQnwN1mNt1LniFIZnmk2C0QQNAZ7LrPh12OC-iCbUwDoVJkE";
+  static const _serverKey =
+      "AAAA0o7mYxs:APA91bFGE8yQfBV6HT29_E98FRyJq72AUQ0DtUbG-WZmOGOKXmElEgrO9ppBaDjYcHkJPPWiz2n1z3jElNNC1ONhPz66cQnwN1mNt1LniFIZnmk2C0QQNAZ7LrPh12OC-iCbUwDoVJkE";
+
   static Future<bool> sendMessage(String to, String title, String body) async {
     final headers = {
       'content-type': 'application/json',
@@ -19,7 +21,7 @@ class PostFCM {
         "id": "1",
         "status": "done"
       },
-      "to": "/topics/mpcwallet"
+      "to": to,
     };
 
     final response = await http.post(_postUrl,
