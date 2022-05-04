@@ -75,6 +75,8 @@ class _InitiateKeyPageState extends State<InitiateKeyPage> {
   final _firebaseMessaging = FirebaseMessaging.instance;
 
   String _currentDeviceId = "";
+  String _destinationDevice = "";
+  String _message = "";
 
   @override
   void initState() {
@@ -111,10 +113,9 @@ class _InitiateKeyPageState extends State<InitiateKeyPage> {
   }
 
   void _sendMessage() async {
-    const target =
-        "fZ1UNGI4OlLlsFf5BPTJ9X:APA91bHuBLMokCeXX03r8Fyih_35SYzt2IrqSvR4uTzaArsOOfLh2vtzzTQVp2SVKdS-y7Ftp1QgQqqrqeaC-Jbph2nBynR1lGEM2Bzuj0wKW8ivMJP33_4i1oFW9E_XZ3hH2FQ8XohA";
-    print("Sending message...");
-    // PostFCM.sendMessage(target, "TEST from Web", "correct one");
+    String target = _destinationDevice;
+    print("Sending message to $target");
+    PostFCM.sendMessage(target, "TEST from Web", _message);
   }
 
   @override
@@ -125,7 +126,16 @@ class _InitiateKeyPageState extends State<InitiateKeyPage> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          Text(_currentDeviceId),
+          const Text("ME"),
+          SelectableText(_currentDeviceId),
+          const Text("Destination"),
+          TextField(onChanged: (text) {
+            _destinationDevice = text;
+          }),
+          const Text("Message"),
+          TextField(onChanged: (text) {
+            _message = text;
+          })
         ],
       ),
     );
