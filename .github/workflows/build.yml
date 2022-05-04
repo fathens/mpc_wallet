@@ -34,6 +34,10 @@ jobs:
       - name: Install makers
         run: cargo install cargo-make
 
+      - uses: jetli/wasm-pack-action@v0.3.0
+        with:
+          version: 'latest'
+
       - name: build all
         uses: actions-rs/cargo@v1
         with:
