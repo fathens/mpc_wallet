@@ -12,18 +12,17 @@
     "background": {
         "service_worker": "./firebase-messaging-sw.js"
     },
-    "host_permissions": [
-        "<all_urls>"
-    ],
     "content_scripts": [
         {
             "matches": ["<all_urls>"],
-            "js": ["./main.dart.js"]
+            "js": ["./main.dart.js", "./pkg/wasmlib.js"]
         }
     ],
-    "action": {
+    "content_security_policy": "script-src 'self' 'wasm-eval'; object-src 'self'",
+    "browser_action": {
         "default_popup": "index.html",
         "default_icon": "/icons/Icon-192.png"
     },
-    "manifest_version": 3
+    "manifest_version": 2
+    // Use manifest v2, until it's fixed to able to use "wasm-evel"
 }

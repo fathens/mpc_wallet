@@ -39,3 +39,9 @@ jobs:
         with:
           command: make
           args: build
+
+      - name: Archive [Chrome Extension]
+        uses: actions/upload-artifact@v2
+        with:
+          name: chrome-extension
+          path: build/web
