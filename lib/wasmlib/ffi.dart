@@ -3,10 +3,10 @@
 
 import 'dart:ffi';
 
-import 'bridge_generated.dart';
+import 'package:mpc_wallet/bridge_generated.dart';
 
 // Re-export the bridge so it is only necessary to import this file.
-export 'bridge_generated.dart';
+export 'package:mpc_wallet/bridge_generated.dart';
 import 'dart:io' as io;
 
 const _base = 'wasmlib';
