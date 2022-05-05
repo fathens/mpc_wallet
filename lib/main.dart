@@ -69,6 +69,7 @@ class _InitiateKeyPageState extends State<InitiateKeyPage> {
   String _currentDeviceId = "";
   String _destinationDevice = "";
   String _message = "";
+  String _addedValue = "0";
 
   @override
   void initState() {
@@ -113,6 +114,9 @@ class _InitiateKeyPageState extends State<InitiateKeyPage> {
   void _calc_add() async {
     final c = await wasmApi.calcAdd(a: 1, b: 2);
     print("Calc ADD: 1 + 2 = $c");
+    setState(() {
+      _addedValue = "1 + 2 = $c";
+    });
   }
 
   @override
@@ -133,7 +137,8 @@ class _InitiateKeyPageState extends State<InitiateKeyPage> {
           TextField(onChanged: (text) {
             _message = text;
           }),
-          ElevatedButton(onPressed: _calc_add, child: const Text("Calc ADD"))
+          ElevatedButton(onPressed: _calc_add, child: const Text("Calc ADD")),
+          Text(_addedValue)
         ],
       ),
     );
