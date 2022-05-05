@@ -126,14 +126,3 @@ script = [
     dart pub global activate ffigen
     '''
 ]
-
-[tasks.hack-android-ndk]
-script = [
-    '''
-    find ~/Library/Android/sdk/ndk/ -name 'libunwind.a' | while read file
-    do
-        dir=$(dirname $file)
-        echo 'INPUT(-lunwind)' > $dir/libgcc.a
-    done
-    '''
-]
