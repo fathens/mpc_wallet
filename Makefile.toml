@@ -22,7 +22,7 @@ done
 ]
 
 [tasks.prepare-web]
-dependencies = ["download-firebasejs", "copy-wasm-web", "codegen-bridge"]
+dependencies = ["download-firebasejs", "copy-wasm-web"]
 
 [tasks.download-firebasejs]
 script = [
@@ -75,7 +75,7 @@ mv -vf $dst $src
 ]
 
 [tasks.build-wasm]
-dependencies = ["install-wasm-pack"]
+dependencies = ["install-wasm-pack", "codegen-bridge"]
 script = [
 '''
 cd wasmlib
