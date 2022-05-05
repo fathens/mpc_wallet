@@ -31,15 +31,8 @@ jobs:
           flutter-version: ${{ env.FLUTTER_VERSION }}
           channel: "stable"
 
-      - uses: jetli/wasm-pack-action@v0.3.0
-        with:
-          version: 'latest'
-
       - name: Install makers
-        uses: actions-rs/cargo@v1
-        with:
-          command: install
-          args: cargo-make
+        run: type makers || cargo install cargo-make
 
       - name: build all
         uses: actions-rs/cargo@v1

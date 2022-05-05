@@ -75,9 +75,17 @@ mv -vf $dst $src
 ]
 
 [tasks.build-wasm]
+dependencies = ["install-wasm-pack"]
 script = [
 '''
 cd wasmlib
 wasm-pack build --target web
+'''
+]
+
+[tasks.install-wasm-pack]
+script = [
+'''
+type wasm-pack || (curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh)
 '''
 ]
