@@ -43,6 +43,9 @@ jobs:
       - name: Install makers
         run: type makers || cargo install cargo-make
 
+      - name: Install LLVM
+        run: sudo apt-get install libclang-dev
+
       - name: build
         uses: actions-rs/cargo@v1
         with:
