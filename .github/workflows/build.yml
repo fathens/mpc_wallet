@@ -100,6 +100,15 @@ jobs:
         with:
           java-version: 11
 
+      - uses: nttld/setup-ndk@v1
+        id: setup-ndk
+        with:
+          ndk-version: r24
+          add-to-path: false
+        - run: ./build.sh
+          env:
+            ANDROID_NDK_HOME: ${{ steps.setup-ndk.outputs.ndk-path }}
+
       - uses: gradle/gradle-build-action@v2
 
       - name: build all
