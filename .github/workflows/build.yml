@@ -5,7 +5,7 @@ env:
   FLUTTER_VERSION: 2.10.5
 
 jobs:
-  build:
+  prepare:
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
@@ -44,14 +44,38 @@ jobs:
       - name: Install makers
         run: type makers || cargo install cargo-make
 
-      - name: build all
+  build-chrome_extension:
+    needs: prepare
+    runs-on: ubuntu-20.04
+    steps:
+      - name: build
         uses: actions-rs/cargo@v1
         with:
           command: make
-          args: build
+          args: build-chrome_extension
 
-      - name: Archive [Chrome Extension]
+      - name: Archive
         uses: actions/upload-artifact@v2
         with:
           name: chrome-extension
           path: build/web
+
+  build-android:
+    needs: prepare
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/setup-java@v1.4.3
+        with:
+          java-version: 1.8
+
+      - name: build all
+        uses: actions-rs/cargo@v1
+        with:
+          command: make
+          args: build-android
+
+      - name: Archive
+        uses: actions/upload-artifact@v2
+        with:
+          name: android
+          path: build/app/outputs/flutter-apk/app.apk
