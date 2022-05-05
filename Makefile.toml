@@ -105,7 +105,6 @@ done
 dependencies = ["install-flutter_rust_bridge"]
 script = [
 '''
-#!/usr/bin/env bash -x
 cargo install cargo-ndk cbindgen
 
 flutter_rust_bridge_codegen \
