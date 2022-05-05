@@ -8,17 +8,25 @@ dependencies = ["build-chrome_extension"]
 [tasks.build-chrome_extension]
 dependencies = ["prepare-web"]
 script = [
-'''
-flutter build web --web-renderer html --csp
+    '''
+    flutter build web --web-renderer html --csp
 
-for src in build/web/*.js
-do
-    dst=${src}.replaced
-    cat $src | sed 's/https:\/\/www\.gstatic\.com/generated/g' > $dst
-    diff $src $dst || echo ''
-    mv -vf $dst $src
-done
-'''
+    for src in build/web/*.js
+    do
+        dst=${src}.replaced
+        cat $src | sed 's/https:\/\/www\.gstatic\.com/generated/g' > $dst
+        diff $src $dst || echo ""
+        mv -vf $dst $src
+    done
+    '''
+]
+
+[tasks.build-android]
+dependencies = ["codegen-bridge"]
+script = [
+    '''
+    flutter build apk
+    '''
 ]
 
 [tasks.prepare-web]
@@ -26,58 +34,95 @@ dependencies = ["download-firebasejs", "copy-wasm-web"]
 
 [tasks.download-firebasejs]
 script = [
-'''
-version="8.10.1"
-dstdir="web/generated/firebasejs/$version"
-mkdir -pv $dstdir
-for mod in "app" "messaging"
-do
-    url="https://www.gstatic.com/firebasejs/${version}/firebase-${mod}.js"
-    target=$dstdir/$(basename $url)
-    echo "Downloading $url -> $target"
-    [ -f $target ] || curl -o $target -L $url
-done
-'''
+    '''
+    version="8.10.1"
+    dstdir="web/generated/firebasejs/$version"
+    mkdir -pv $dstdir
+    for mod in "app" "messaging"
+    do
+        url="https://www.gstatic.com/firebasejs/${version}/firebase-${mod}.js"
+        target=$dstdir/$(basename $url)
+        echo "Downloading $url -> $target"
+        [ -f $target ] || curl -o $target -L $url
+    done
+    '''
 ]
 
 [tasks.copy-wasm-web]
 dependencies = ["build-wasm"]
 script = [
-'''
-dir="web/generated/wasmlib"
-rm -rf $dir
-mkdir -pv $dir
-for ext in js wasm
-do
-    cp -vf wasmlib/pkg/*.$ext $dir/
-done
-for src in $(find $dir -name '*.js')
-do
-    dst=${src}.sed
-    cat $src | sed 's/export default init;//' | sed 's/^export //' > $dst
-    diff $src $dst || echo ''
+    '''
+    dir="web/generated/wasmlib"
+    rm -rf $dir
+    mkdir -pv $dir
+    for ext in js wasm
+    do
+        cp -vf wasmlib/pkg/*.$ext $dir/
+    done
+    for src in $(find $dir -name '*.js')
+    do
+        dst=${src}.sed
+        cat $src | sed 's/export default init;//' | sed 's/^export //' > $dst
+        diff $src $dst || echo ""
+        mv -vf $dst $src
+    done
+
+    src=$dir/wasmlib.js
+    dst=${src}.next
+    awk -f - $src > $dst <<'EOF'
+    BEGIN { PUT=0; IN=0 }
+    /function init/ { sub("input", ""); print $0; PUT=1; IN=1 }
+    /input = new URL/ { print "    input = 'generated/wasmlib/wasmlib_bg.wasm';" }
+    / +}$/ { if (IN == 1) { IN=0 } }
+    /.*/ { if (PUT == 0) { print $0 } else { if (IN == 0) { PUT=0 } } }
+    EOF
+
+    diff $src $dst || echo ""
     mv -vf $dst $src
-done
-
-src=$dir/wasmlib.js
-dst=${src}.next
-awk -f - $src > $dst <<'EOF'
-BEGIN { PUT=0; IN=0 }
-/function init/ { sub("input", ""); print $0; PUT=1; IN=1 }
-/input = new URL/ { print "    input = 'generated/wasmlib/wasmlib_bg.wasm';" }
-/ +}$/ { if (IN == 1) { IN=0 } }
-/.*/ { if (PUT == 0) { print $0 } else { if (IN == 0) { PUT=0 } } }
-EOF
-
-diff $src $dst || echo ''
-mv -vf $dst $src
-'''
+    '''
 ]
 
 [tasks.build-wasm]
+dependencies = ["install-wasm-pack", "codegen-bridge"]
 script = [
-'''
-cd wasmlib
-wasm-pack build --target web
-'''
+    '''
+    cd wasmlib
+    wasm-pack build --target web
+    '''
+]
+
+[tasks.install-wasm-pack]
+script = [
+    '''
+    type wasm-pack || (curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh)
+    '''
+]
+
+[tasks.codegen-bridge]
+dependencies = ["install-flutter_rust_bridge", "flutter-get"]
+script = [
+    '''
+    cargo install cargo-ndk cbindgen
+
+    flutter_rust_bridge_codegen \
+        -r wasmlib/src/api.rs \
+        -d lib/bridge_generated.dart
+
+    flutter pub run build_runner build
+    '''
+]
+
+[tasks.flutter-get]
+script = [
+    '''
+    flutter pub get
+    '''
+]
+
+[tasks.install-flutter_rust_bridge]
+script = [
+    '''
+    cargo install flutter_rust_bridge_codegen
+    dart pub global activate ffigen
+    '''
 ]

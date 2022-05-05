@@ -1,11 +1,6 @@
-import 'dart:developer';
-import 'dart:html';
-import 'dart:js_util';
-
 import 'package:flutter/material.dart';
-import 'package:mpc_wallet/model/partial_key.dart';
 import 'package:mpc_wallet/util/fcm.dart';
-import 'package:mpc_wallet/util/wasmlib.dart';
+import 'package:mpc_wallet/wasmlib/facade.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'firebase_options.dart';
@@ -20,10 +15,6 @@ const AndroidNotificationChannel channel = AndroidNotificationChannel(
   // description
   importance: Importance.high,
 );
-
-Future<void> initWASM() async {
-  await promiseToFuture(init());
-}
 
 Future<void> main() async {
   print("Launching MPC Wallet...");
@@ -43,11 +34,6 @@ Future<void> main() async {
     provisional: false,
     sound: true,
   );
-
-  print("Subscribe event 'message' of window");
-  window.addEventListener("message", (event) {
-    print("Event $event");
-  });
 
   runApp(const MyApp());
 }
@@ -83,6 +69,7 @@ class _InitiateKeyPageState extends State<InitiateKeyPage> {
   String _currentDeviceId = "";
   String _destinationDevice = "";
   String _message = "";
+  String _addedValue = "0";
 
   @override
   void initState() {
@@ -125,11 +112,11 @@ class _InitiateKeyPageState extends State<InitiateKeyPage> {
   }
 
   void _calc_add() async {
-    await initWASM();
-    print("WASM initialized.");
-
-    final c = calc_add(1, 2);
+    final c = await wasmApi.calcAdd(a: 1, b: 2);
     print("Calc ADD: 1 + 2 = $c");
+    setState(() {
+      _addedValue = "1 + 2 = $c";
+    });
   }
 
   @override
@@ -150,7 +137,8 @@ class _InitiateKeyPageState extends State<InitiateKeyPage> {
           TextField(onChanged: (text) {
             _message = text;
           }),
-          ElevatedButton(onPressed: _calc_add, child: const Text("Calc ADD"))
+          ElevatedButton(onPressed: _calc_add, child: const Text("Calc ADD")),
+          Text(_addedValue)
         ],
       ),
     );

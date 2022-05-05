@@ -5,7 +5,7 @@ env:
   FLUTTER_VERSION: 2.10.5
 
 jobs:
-  build:
+  build-chrome_extension:
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
@@ -14,7 +14,16 @@ jobs:
         with:
           toolchain: stable
 
-      - uses: Swatinem/rust-cache@v1
+      - uses: actions/cache@v3
+        with:
+          path: |
+            ~/.cargo/bin
+            ~/.cargo/.crates2.json
+            ~/.cargo/.crates.toml
+            ~/.cargo/git
+            ~/.cargo/registry
+            ./target
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
 
       - name: flutter cache
         uses: subosito/flutter-action@v2
@@ -31,24 +40,105 @@ jobs:
           flutter-version: ${{ env.FLUTTER_VERSION }}
           channel: "stable"
 
-      - uses: jetli/wasm-pack-action@v0.3.0
-        with:
-          version: 'latest'
-
       - name: Install makers
+        run: type makers || cargo install cargo-make
+
+      - name: Install LLVM
+        run: sudo apt-get install libclang-dev
+
+      - name: build
         uses: actions-rs/cargo@v1
         with:
-          command: install
-          args: cargo-make
+          command: make
+          args: build-chrome_extension
+
+      - name: Archive
+        uses: actions/upload-artifact@v2
+        with:
+          name: chrome-extension
+          path: build/web
+
+  build-android:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+
+      - uses: actions/cache@v3
+        with:
+          path: |
+            ~/.cargo/bin
+            ~/.cargo/.crates2.json
+            ~/.cargo/.crates.toml
+            ~/.cargo/git
+            ~/.cargo/registry
+            ./target
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+
+      - name: flutter cache
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: "stable"
+          cache: true
+          cache-key: flutter
+          cache-path: ${{ runner.tool_cache }}/flutter
+
+      - name: install Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: "stable"
+
+      - name: Install makers
+        run: type makers || cargo install cargo-make
+
+      - name: Install LLVM
+        run: sudo apt-get install libclang-dev
+
+      - uses: actions/setup-java@v2
+        with:
+          distribution: temurin
+          java-version: 11
+
+      - name: Install rust targets
+        run: rustup target add aarch64-linux-android armv7-linux-androideabi x86_64-linux-android i686-linux-android
+
+      - uses: nttld/setup-ndk@v1
+        id: setup-ndk
+        with:
+          ndk-version: r24
+          add-to-path: false
+      - name: Set ANDROID_NDK
+        run: echo "ANDROID_NDK=${{ steps.setup-ndk.outputs.ndk-path }}" >> $GITHUB_ENV
+
+      - name: Set ANDROID_NDK for gradle
+        run: |
+          mkdir ~/.gradle
+          echo "ANDROID_NDK=$ANDROID_NDK" > ~/.gradle/gradle.properties
+
+      - name: Hack Android NDK
+        run: |
+          find ${ANDROID_NDK} -name 'libunwind.a' | while read file
+          do
+            dir=$(dirname $file)
+            echo "Adding $dir/libgcc.a"
+            echo 'INPUT(-lunwind)' > $dir/libgcc.a
+          done
+
+      - uses: gradle/gradle-build-action@v2
 
       - name: build all
         uses: actions-rs/cargo@v1
         with:
           command: make
-          args: build
+          args: build-android
 
-      - name: Archive [Chrome Extension]
+      - name: Archive
         uses: actions/upload-artifact@v2
         with:
-          name: chrome-extension
-          path: build/web
+          name: android
+          path: build/app/outputs/flutter-apk/app-release.apk
