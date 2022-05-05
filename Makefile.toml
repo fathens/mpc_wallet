@@ -15,7 +15,7 @@ script = [
     do
         dst=${src}.replaced
         cat $src | sed 's/https:\/\/www\.gstatic\.com/generated/g' > $dst
-        diff $src $dst || echo ''
+        diff $src $dst || echo ""
         mv -vf $dst $src
     done
     '''
@@ -63,7 +63,7 @@ script = [
     do
         dst=${src}.sed
         cat $src | sed 's/export default init;//' | sed 's/^export //' > $dst
-        diff $src $dst || echo ''
+        diff $src $dst || echo ""
         mv -vf $dst $src
     done
 
@@ -77,7 +77,7 @@ script = [
     /.*/ { if (PUT == 0) { print $0 } else { if (IN == 0) { PUT=0 } } }
     EOF
 
-    diff $src $dst || echo ''
+    diff $src $dst || echo ""
     mv -vf $dst $src
     '''
 ]
