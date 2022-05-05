@@ -21,6 +21,14 @@ done
 '''
 ]
 
+[tasks.build-android]
+dependencies = ["codegen-bridge"]
+script = [
+'''
+flutter build apk
+'''
+]
+
 [tasks.prepare-web]
 dependencies = ["download-firebasejs", "copy-wasm-web"]
 
