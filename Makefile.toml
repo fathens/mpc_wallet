@@ -22,7 +22,7 @@ done
 ]
 
 [tasks.prepare-web]
-dependencies = ["download-firebasejs", "copy-wasm-web"]
+dependencies = ["download-firebasejs", "copy-wasm-web", "codegen-bridge"]
 
 [tasks.download-firebasejs]
 script = [
@@ -101,7 +101,7 @@ done
 '''
 ]
 
-[tasks.prepare-android]
+[tasks.codegen-bridge]
 dependencies = ["install-flutter_rust_bridge"]
 script = [
 '''
