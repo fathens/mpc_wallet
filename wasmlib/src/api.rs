@@ -17,6 +17,6 @@ pub fn greet() {
 }
 
 #[wasm_bindgen]
-pub fn calc_add(a: u8, b: u8) -> u8 {
+pub fn calc_add(a: i32, b: i32) -> i32 {
     return a + b;
 }
