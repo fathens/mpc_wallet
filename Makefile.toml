@@ -89,3 +89,37 @@ script = [
 type wasm-pack || (curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh)
 '''
 ]
+
+[tasks.hack-android-ndk]
+script = [
+'''
+find ~/Library/Android/sdk/ndk/ -name 'libunwind.a' | while read file
+do
+    dir=$(dirname $file)
+    echo 'INPUT(-lunwind)' > $dir/libgcc.a
+done
+'''
+]
+
+[tasks.prepare-android]
+dependencies = ["install-flutter_rust_bridge"]
+script = [
+'''
+#!/usr/bin/env bash -x
+cargo install cargo-ndk cbindgen
+
+flutter_rust_bridge_codegen \
+    -r wasmlib/src/api.rs \
+    -d lib/bridge_generated.dart
+
+flutter pub run build_runner build
+'''
+]
+
+[tasks.install-flutter_rust_bridge]
+script = [
+'''
+cargo install flutter_rust_bridge_codegen
+dart pub global activate ffigen
+'''
+]

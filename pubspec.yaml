@@ -39,6 +39,8 @@ dependencies:
   cupertino_icons: ^1.0.2
   firebase_messaging: ^11.2.15
   http: ^0.13.4
+  flutter_rust_bridge: ^1.28.1
+  freezed_annotation: ^2.0.1
 
 dev_dependencies:
   flutter_test:
@@ -50,6 +52,8 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^1.0.0
+  build_runner: ^2.1.10
+  freezed: ^2.0.2
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
