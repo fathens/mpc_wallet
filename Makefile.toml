@@ -15,6 +15,7 @@ for src in build/web/*.js
 do
     dst=${src}.replaced
     cat $src | sed 's/https:\/\/www\.gstatic\.com/generated/g' > $dst
+    diff $src $dst || echo ''
     mv -vf $dst $src
 done
 '''
