@@ -9,7 +9,6 @@ dependencies = ["build-chrome_extension"]
 dependencies = ["prepare-web"]
 script = [
 '''
-#!/usr/bin/env bash
 flutter build web --web-renderer html --csp
 
 for src in build/web/*.js
@@ -77,7 +76,6 @@ mv -vf $dst $src
 [tasks.build-wasm]
 script = [
 '''
-#!/usr/bin/env bash
 cd wasmlib
 wasm-pack build --target web
 '''
