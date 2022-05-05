@@ -85,6 +85,9 @@ flutter build web --web-renderer html --csp
 script = [
 '''
 #!/usr/bin/env bash
+pwd
+ls -la
+
 cd wasmlib
 wasm-pack build --target web
 '''
