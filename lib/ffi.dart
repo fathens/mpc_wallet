@@ -17,6 +17,6 @@ final _dylib = io.Platform.isWindows ? '$_base.dll' : 'lib$_base.so';
 
 // The late modifier delays initializing the value until it is actually needed,
 // leaving precious little time for the program to quickly start up.
-late final Native api = NativeImpl(io.Platform.isIOS || io.Platform.isMacOS
+late final Wasmlib api = WasmlibImpl(io.Platform.isIOS || io.Platform.isMacOS
     ? DynamicLibrary.executable()
     : DynamicLibrary.open(_dylib));
