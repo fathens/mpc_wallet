@@ -3,31 +3,32 @@ skip_core_tasks = true
 
 [tasks.build]
 description = "Build All"
-dependencies = ["build-web"]
+dependencies = ["build-chrome_extension"]
 
-[tasks.build-web]
-dependencies = ["replace_gstatic", "copy-wasm-web"]
-
-[tasks.replace_gstatic]
-dependencies = ["download-firebasejs"]
+[tasks.build-chrome_extension]
+dependencies = ["prepare-web"]
 script = [
 '''
 #!/usr/bin/env bash
+flutter build web --web-renderer html --csp
+
 for src in build/web/*.js
 do
     dst=${src}.replaced
-    cat $src | sed 's/https:\/\/www\.gstatic\.com/./g' > $dst
+    cat $src | sed 's/https:\/\/www\.gstatic\.com/generated/g' > $dst
     mv -vf $dst $src
 done
 '''
 ]
 
+[tasks.prepare-web]
+dependencies = ["download-firebasejs", "copy-wasm-web"]
+
 [tasks.download-firebasejs]
-dependencies = ["build-chrome_extension"]
 script = [
 '''
 version="8.10.1"
-dstdir="build/web/firebasejs/$version"
+dstdir="web/generated/firebasejs/$version"
 mkdir -pv $dstdir
 for mod in "app" "messaging"
 do
@@ -43,7 +44,7 @@ done
 dependencies = ["build-wasm"]
 script = [
 '''
-dir="build/web/pkg"
+dir="web/generated/wasmlib"
 rm -rf $dir
 mkdir -pv $dir
 for ext in js wasm
@@ -63,7 +64,7 @@ dst=${src}.next
 awk -f - $src > $dst <<'EOF'
 BEGIN { PUT=0; IN=0 }
 /function init/ { sub("input", ""); print $0; PUT=1; IN=1 }
-/input = new URL/ { print "    input = 'pkg/wasmlib_bg.wasm';" }
+/input = new URL/ { print "    input = 'generated/wasmlib/wasmlib_bg.wasm';" }
 / +}$/ { if (IN == 1) { IN=0 } }
 /.*/ { if (PUT == 0) { print $0 } else { if (IN == 0) { PUT=0 } } }
 EOF
@@ -73,21 +74,10 @@ mv -vf $dst $src
 '''
 ]
 
-[tasks.build-chrome_extension]
-script = [
-'''
-#!/usr/bin/env bash
-flutter build web --web-renderer html --csp
-'''
-]
-
 [tasks.build-wasm]
 script = [
 '''
 #!/usr/bin/env bash
-pwd
-ls -la
-
 cd wasmlib
 wasm-pack build --target web
 '''
