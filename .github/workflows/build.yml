@@ -66,6 +66,7 @@ jobs:
       - uses: actions-rs/toolchain@v1
         with:
           toolchain: stable
+          target: armv7-linux-androideabi
 
       - uses: actions/cache@v3
         with:
@@ -112,7 +113,7 @@ jobs:
       - name: Set ANDROID_NDK
         run: echo "ANDROID_NDK=${{ steps.setup-ndk.outputs.ndk-path }}" >> $GITHUB_ENV
 
-      - name: Hack Android NDK
+      - name: Set ANDROID_NDK for gradle
         run: |
           mkdir ~/.gradle
           echo "ANDROID_NDK=$ANDROID_NDK" > ~/.gradle/gradle.properties
@@ -122,6 +123,7 @@ jobs:
           find ${ANDROID_NDK} -name 'libunwind.a' | while read file
           do
             dir=$(dirname $file)
+            echo "Adding $dir/libgcc.a"
             echo 'INPUT(-lunwind)' > $dir/libgcc.a
           done
 
