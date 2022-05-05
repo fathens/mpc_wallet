@@ -111,7 +111,7 @@ class _InitiateKeyPageState extends State<InitiateKeyPage> {
   }
 
   void _calc_add() async {
-    final c = wasmApi.calcAdd(a: 1, b: 2);
+    final c = await wasmApi.calcAdd(a: 1, b: 2);
     print("Calc ADD: 1 + 2 = $c");
   }
 
