@@ -3,8 +3,28 @@ import 'dart:developer';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert' show Encoding, json;
+import 'package:firebase_core/firebase_core.dart';
+import 'package:mpc_wallet/firebase_options.dart';
 
 final _postUrl = Uri.parse('https://fcm.googleapis.com/fcm/send');
+
+Future<void> initFirebase() async {
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
+  log("Loading FirebaseMessaging...");
+  final settings = await FirebaseMessaging.instance.requestPermission(
+    alert: true,
+    announcement: false,
+    badge: true,
+    carPlay: false,
+    criticalAlert: false,
+    provisional: false,
+    sound: true,
+  );
+  log("Loaded FirebaseMessaging: $settings");
+}
 
 Future<String> getDeviceToken() async {
   String? token;

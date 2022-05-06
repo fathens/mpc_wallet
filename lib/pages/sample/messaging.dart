@@ -2,29 +2,9 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:mpc_wallet/util/fcm.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:mpc_wallet/firebase_options.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter/foundation.dart';
-
-Future<void> initFirebase() async {
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
-
-  log("Loading FirebaseMessaging...");
-  final settings = await FirebaseMessaging.instance.requestPermission(
-    alert: true,
-    announcement: false,
-    badge: true,
-    carPlay: false,
-    criticalAlert: false,
-    provisional: false,
-    sound: true,
-  );
-  log("Loaded FirebaseMessaging: $settings");
-}
 
 final flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 

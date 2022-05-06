@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:mpc_wallet/pages/account/add.dart';
 import 'package:mpc_wallet/pages/sample/messaging.dart';
 import 'package:mpc_wallet/pages/sample/rustuse.dart';
+import 'package:mpc_wallet/util/fcm.dart';
 
 Future<void> main() async {
   log("Launching MPC Wallet...");
