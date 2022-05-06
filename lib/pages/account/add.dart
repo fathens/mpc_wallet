@@ -10,6 +10,10 @@ import 'package:provider/provider.dart';
 
 var _accountAdding = AccountAdding();
 
+bool _joined = false;
+bool _created = false;
+bool _accountCreated = false;
+
 class AccountAddPage extends StatelessWidget {
   final title = "Add Account";
 
@@ -22,7 +26,10 @@ class AccountAddPage extends StatelessWidget {
           MaterialPageRoute(builder: (context) => const GenKeyEnterNamePage()));
     }
 
-    void _goEnterKeyword() async {}
+    void _goEnterKeyword() async {
+      Navigator.push(context,
+          MaterialPageRoute(builder: (context) => const EnterKeywordPage()));
+    }
 
     return Scaffold(
       appBar: AppBar(
@@ -281,8 +288,6 @@ class GeneratedKeywordPage extends StatelessWidget {
   }
 }
 
-bool _joined = false;
-
 class WaitMembersJoinPage extends StatelessWidget {
   final title = "Waiting members join";
 
@@ -367,8 +372,6 @@ class MembersJoinedPage extends StatelessWidget {
   }
 }
 
-bool _created = false;
-
 class WaitKeyCreatedPage extends StatelessWidget {
   final title = "Creating key";
 
@@ -422,6 +425,7 @@ class KeyCreatedPage extends StatelessWidget {
       });
       _joined = false;
       _created = false;
+      _accountCreated = false;
       condition.addAccount(_account);
     }
 
@@ -471,6 +475,139 @@ class KeyCreatedPage extends StatelessWidget {
         onPressed: _goHome,
         tooltip: 'Send',
         child: const Icon(Icons.home),
+      ),
+    );
+  }
+}
+
+class EnterKeywordPage extends StatefulWidget {
+  final title = "Enter keyword";
+
+  const EnterKeywordPage({Key? key}) : super(key: key);
+
+  @override
+  _EnterKeywordPageState createState() => _EnterKeywordPageState();
+}
+
+class _EnterKeywordPageState extends State<EnterKeywordPage> {
+  String _keyword = "";
+
+  @override
+  Widget build(BuildContext context) {
+    void _goConfirm() {
+      final keyword = AccountKeyword.decode(_keyword);
+      Navigator.push(context,
+          MaterialPageRoute(builder: (context) => ConfirmKeyDetail(keyword)));
+    }
+
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(widget.title),
+      ),
+      body: Container(
+        alignment: Alignment.center,
+        padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Spacer(),
+            const Text("Enter shared keyword"),
+            TextField(onChanged: (text) {
+              _keyword = text;
+            }),
+            const Spacer(),
+          ],
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        key: const Key('confirm'),
+        onPressed: _goConfirm,
+        tooltip: 'Send',
+        child: const Icon(Icons.arrow_forward),
+      ),
+    );
+  }
+}
+
+class ConfirmKeyDetail extends StatelessWidget {
+  final title = "Confirm detail";
+  final AccountKeyword keyword;
+
+  const ConfirmKeyDetail(this.keyword, {Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    void _goWaitAccount() {
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => const WaitAccountCreatedPage()));
+    }
+
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(title),
+      ),
+      body: Container(
+        alignment: Alignment.center,
+        padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Spacer(),
+            const Text("You are joining account bellow"),
+            const Spacer(flex: 2),
+            const Text("Name", style: TextStyle(fontWeight: FontWeight.bold)),
+            Text(keyword.name),
+            const Spacer(),
+            const Text("Sign settings",
+                style: TextStyle(fontWeight: FontWeight.bold)),
+            Text("${keyword.m} of ${keyword.n}"),
+            const Spacer(flex: 3),
+          ],
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        key: const Key('confirm'),
+        onPressed: _goWaitAccount,
+        tooltip: 'Send',
+        child: const Icon(Icons.arrow_forward),
+      ),
+    );
+  }
+}
+
+class WaitAccountCreatedPage extends StatelessWidget {
+  final title = "Creating key";
+
+  const WaitAccountCreatedPage({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    Timer(const Duration(seconds: 3), () {
+      if (_accountCreated) {
+        log("Already created");
+      } else {
+        _accountCreated = true;
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) => const KeyCreatedPage()));
+      }
+    });
+
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(title),
+      ),
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: const [
+          Spacer(),
+          SpinKitThreeBounce(
+            color: Colors.green,
+            size: 100,
+          ),
+          Spacer(),
+        ],
       ),
     );
   }
