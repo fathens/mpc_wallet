@@ -6,6 +6,8 @@ import 'package:mpc_wallet/pages/sample/messaging.dart';
 import 'package:mpc_wallet/pages/sample/rustuse.dart';
 import 'package:mpc_wallet/util/fcm.dart';
 
+List<String> mainAccounts = List.empty(growable: true);
+
 Future<void> main() async {
   log("Launching MPC Wallet...");
 
@@ -27,7 +29,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.green,
       ),
-      home: const InitiateKeyPage(title: 'MPC Wallet'),
+      home: const AccountListPage(title: 'MPC Wallet'),
       routes: {
         "/messaging": (context) => const MessagingPage(),
         "/calc": (context) => const RustCalcPage(),
@@ -36,16 +38,16 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class InitiateKeyPage extends StatefulWidget {
+class AccountListPage extends StatefulWidget {
   final String title;
 
-  const InitiateKeyPage({Key? key, required this.title}) : super(key: key);
+  const AccountListPage({Key? key, required this.title}) : super(key: key);
 
   @override
-  _InitiateKeyPageState createState() => _InitiateKeyPageState();
+  _AccountListPageState createState() => _AccountListPageState();
 }
 
-class _InitiateKeyPageState extends State<InitiateKeyPage> {
+class _AccountListPageState extends State<AccountListPage> {
   @override
   void initState() {
     super.initState();
@@ -78,11 +80,14 @@ class _InitiateKeyPageState extends State<InitiateKeyPage> {
         ],
       ),
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: const [
-            // Add something
-          ],
+        child: ListView(
+          children: mainAccounts.map((account) {
+            return ListTile(
+              leading: const Icon(Icons.send),
+              title: Text(account),
+              trailing: const Icon(Icons.more_vert),
+            );
+          }).toList(),
         ),
       ),
       floatingActionButton: FloatingActionButton(
@@ -95,7 +100,7 @@ class _InitiateKeyPageState extends State<InitiateKeyPage> {
   }
 
   void _goAccountAdd() {
-    Navigator.push(
-        context, MaterialPageRoute(builder: (context) => const AccountAddPage()));
+    Navigator.push(context,
+        MaterialPageRoute(builder: (context) => const AccountAddPage()));
   }
 }

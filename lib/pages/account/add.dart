@@ -1,6 +1,11 @@
+import 'dart:async';
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:mpc_wallet/main.dart';
 import 'package:mpc_wallet/model/account_keyword.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 var _accountAdding = AccountAdding();
 
@@ -244,7 +249,10 @@ class GeneratedKeywordPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    void _goWaitMembersJoin() {}
+    void _goWaitMembersJoin() {
+      Navigator.push(context,
+          MaterialPageRoute(builder: (context) => const WaitMembersJoinPage()));
+    }
 
     return Scaffold(
       appBar: AppBar(
@@ -268,6 +276,199 @@ class GeneratedKeywordPage extends StatelessWidget {
               const Spacer(),
             ],
           )),
+    );
+  }
+}
+
+bool _joined = false;
+
+class WaitMembersJoinPage extends StatelessWidget {
+  final title = "Waiting members join";
+
+  const WaitMembersJoinPage({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    Timer(const Duration(seconds: 3), () {
+      if (_joined) {
+        log("Already joined");
+      } else {
+        _joined = true;
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) => const MembersJoinedPage()));
+      }
+    });
+
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(title),
+      ),
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: const [
+          Spacer(),
+          SpinKitRipple(
+            color: Colors.green,
+            size: 200,
+          ),
+          Spacer(),
+        ],
+      ),
+    );
+  }
+}
+
+class MembersJoinedPage extends StatelessWidget {
+  final title = "Joined members";
+
+  const MembersJoinedPage({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    void _goCreateKey() {
+      Navigator.push(context,
+          MaterialPageRoute(builder: (context) => const WaitKeyCreatedPage()));
+    }
+
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(title),
+      ),
+      body: Container(
+          alignment: Alignment.center,
+          padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Spacer(),
+              const Text("All members joined here"),
+              const Text("Please confirm name of members"),
+              const Spacer(),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: const [
+                  Text("Kunio [iMac] (me)"),
+                  Text("Nick [Galaxy]"),
+                  Text("Kacy [Pixel]"),
+                ],
+              ),
+              const Spacer(),
+              const Spacer(),
+            ],
+          )),
+      floatingActionButton: FloatingActionButton(
+        key: const Key('send'),
+        onPressed: _goCreateKey,
+        tooltip: 'Send',
+        child: const Icon(Icons.arrow_forward),
+      ),
+    );
+  }
+}
+
+bool _created = false;
+
+class WaitKeyCreatedPage extends StatelessWidget {
+  final title = "Creating key";
+
+  const WaitKeyCreatedPage({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    Timer(const Duration(seconds: 3), () {
+      if (_created) {
+        log("Already created");
+      } else {
+        _created = true;
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) => const KeyCreatedPage()));
+      }
+    });
+
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(title),
+      ),
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: const [
+          Spacer(),
+          SpinKitThreeBounce(
+            color: Colors.green,
+            size: 100,
+          ),
+          Spacer(),
+        ],
+      ),
+    );
+  }
+}
+
+class KeyCreatedPage extends StatelessWidget {
+  final title = "Key Created";
+
+  final _account = "0x42Eb768f...3153f06";
+
+  const KeyCreatedPage({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    void _goHome() {
+      Navigator.popUntil(context, (route) {
+        return route.settings.name == "/";
+      });
+      _joined = false;
+      _created = false;
+      mainAccounts.add(_account);
+    }
+
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(title),
+      ),
+      body: Container(
+          alignment: Alignment.center,
+          padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Spacer(),
+              const Text(
+                "Your account just have been created !",
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+              const Spacer(),
+              Text(_account),
+              const Spacer(),
+              const Text("This account's partial key is stored"),
+              const Text("in this device safety."),
+              const Spacer(),
+              Container(
+                padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
+                decoration: BoxDecoration(
+                  border: Border.all(),
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Text("Optionally, you can download the key"),
+                    const Text("and store it safety place"),
+                    ElevatedButton(
+                      onPressed: () => {},
+                      child: const Text("Download key"),
+                    ),
+                  ],
+                ),
+              ),
+              const Spacer(),
+            ],
+          )),
+      floatingActionButton: FloatingActionButton(
+        key: const Key('send'),
+        onPressed: _goHome,
+        tooltip: 'Send',
+        child: const Icon(Icons.home),
+      ),
     );
   }
 }
