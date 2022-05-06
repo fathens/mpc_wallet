@@ -1,39 +1,15 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
-import 'package:mpc_wallet/util/fcm.dart';
-import 'package:mpc_wallet/wasmlib/facade.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
-import 'firebase_options.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-
-final flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
-
-const AndroidNotificationChannel channel = AndroidNotificationChannel(
-  'high_importance_channel', // id
-  'High Importance Notifications', // title
-  description: 'This channel is used for important notifications.',
-  // description
-  importance: Importance.high,
-);
+import 'package:mpc_wallet/pages/sample/messaging.dart';
+import 'package:mpc_wallet/pages/sample/rustuse.dart';
 
 Future<void> main() async {
-  print("Launching MPC Wallet...");
+  log("Launching MPC Wallet...");
 
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
 
-  print("Loading FirebaseMessaging...");
-  final settings = await FirebaseMessaging.instance.requestPermission(
-    alert: true,
-    announcement: false,
-    badge: true,
-    carPlay: false,
-    criticalAlert: false,
-    provisional: false,
-    sound: true,
-  );
+  await initFirebase();
 
   runApp(const MyApp());
 }
@@ -50,6 +26,10 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.green,
       ),
       home: const InitiateKeyPage(title: 'MPC Wallet'),
+      routes: {
+        "/messaging": (context) => const MessagingPage(),
+        "/calc": (context) => const RustCalcPage(),
+      },
     );
   }
 }
@@ -64,105 +44,50 @@ class InitiateKeyPage extends StatefulWidget {
 }
 
 class _InitiateKeyPageState extends State<InitiateKeyPage> {
-  final _firebaseMessaging = FirebaseMessaging.instance;
-
-  String _currentDeviceId = "";
-  String _destinationDevice = "";
-  String _message = "";
-  String _addedValue = "0";
-
   @override
   void initState() {
     super.initState();
-
-    _firebaseMessaging.getToken().then((token) {
-      print("Token=$token");
-      if (token != null) {
-        setState(() {
-          _currentDeviceId = token;
-        });
-      }
-    });
-
-    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      final notification = message.notification;
-      print("Received: ${message.category}: ${notification?.title}: ${notification?.body}");
-
-      if (notification != null && notification.android != null) {
-        flutterLocalNotificationsPlugin.show(
-            notification.hashCode,
-            notification.title,
-            notification.body,
-            NotificationDetails(
-              android: AndroidNotificationDetails(
-                channel.id,
-                channel.name,
-                channelDescription: channel.description,
-                icon: 'launch_background',
-              ),
-            ));
-      }
-    });
-  }
-
-  void _sendMessage() async {
-    String target = _destinationDevice;
-    print("Sending message to $target");
-    PostFCM.sendMessage(target, "TEST from Web", _message);
-  }
-
-  void _calc_add() async {
-    final c = await wasmApi.calcAdd(a: 1, b: 2);
-    print("Calc ADD: 1 + 2 = $c");
-    setState(() {
-      _addedValue = "1 + 2 = $c";
-    });
   }
 
   @override
   Widget build(BuildContext context) {
-    final menuItemNames = ["Settings"];
-
-    final _body = Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          const Text("ME"),
-          SelectableText(_currentDeviceId),
-          const Text("Destination"),
-          TextField(onChanged: (text) {
-            _destinationDevice = text;
-          }),
-          const Text("Message"),
-          TextField(onChanged: (text) {
-            _message = text;
-          }),
-          ElevatedButton(onPressed: _calc_add, child: const Text("Calc ADD")),
-          Text(_addedValue)
-        ],
-      ),
-    );
+    final menuItemNames = {
+      "Messaging": "/messaging",
+      "Calc": "/calc",
+    };
 
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
         actions: [
-          PopupMenuButton(itemBuilder: (context) {
-            return menuItemNames.map((name) {
-              return PopupMenuItem(
-                child: Text(name),
-                value: name,
-              );
-            }).toList();
-          })
+          PopupMenuButton(
+            itemBuilder: (context) {
+              return menuItemNames.keys.map((name) {
+                return PopupMenuItem(
+                  child: Text(name),
+                  value: menuItemNames[name],
+                );
+              }).toList();
+            },
+            onSelected: (value) {
+              Navigator.pushNamed(context, value.toString());
+            },
+          )
         ],
       ),
-      body: _body,
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: const [
+            // Add something
+          ],
+        ),
+      ),
       floatingActionButton: FloatingActionButton(
-        key: const Key('send'),
-        onPressed: _sendMessage,
+        key: const Key('add'),
+        onPressed: () => {},
         tooltip: 'Send',
-        child: const Icon(Icons.send),
+        child: const Icon(Icons.add),
       ),
     );
   }
