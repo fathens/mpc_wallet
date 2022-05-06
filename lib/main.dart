@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:mpc_wallet/pages/account/add.dart';
 import 'package:mpc_wallet/pages/sample/messaging.dart';
 import 'package:mpc_wallet/pages/sample/rustuse.dart';
 
@@ -85,10 +86,15 @@ class _InitiateKeyPageState extends State<InitiateKeyPage> {
       ),
       floatingActionButton: FloatingActionButton(
         key: const Key('add'),
-        onPressed: () => {},
+        onPressed: _goAccountAdd,
         tooltip: 'Send',
         child: const Icon(Icons.add),
       ),
     );
+  }
+
+  void _goAccountAdd() {
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => const AccountAddPage()));
   }
 }
