@@ -117,10 +117,12 @@ class _MessagingPageState extends State<MessagingPage> {
           children: [
             const Text("ME"),
             SelectableText(_deviceToken),
+            const Spacer(),
             const Text("Destination"),
             TextField(onChanged: (text) {
               _destinationDevice = text;
             }),
+            const Spacer(),
             const Text("Message Title"),
             TextField(onChanged: (text) {
               _messageTitle = text;
@@ -128,7 +130,8 @@ class _MessagingPageState extends State<MessagingPage> {
             const Text("Message Body"),
             TextField(onChanged: (text) {
               _messageBody = text;
-            })
+            }),
+            const Spacer(),
           ],
         ),
       ),
