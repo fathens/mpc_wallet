@@ -75,7 +75,7 @@ script = [
     /input = new URL/ { print "    input = 'generated/wasmlib/wasmlib_bg.wasm';" }
     / +}$/ { if (IN == 1) { IN=0 } }
     /.*/ { if (PUT == 0) { print $0 } else { if (IN == 0) { PUT=0 } } }
-    EOF
+EOF
 
     diff $src $dst || echo ""
     mv -vf $dst $src
