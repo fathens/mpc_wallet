@@ -63,20 +63,16 @@ class MessagingPage extends StatefulWidget {
 }
 
 class _MessagingPageState extends State<MessagingPage> {
-  final _firebaseMessaging = FirebaseMessaging.instance;
-
   String _deviceToken = "";
   String _destinationDevice = "";
   String _messageTitle = "";
   String _messageBody = "";
 
   void _initToken() async {
-    final token = await _firebaseMessaging.getToken();
-    if (token != null) {
-      setState(() {
-        _deviceToken = token;
-      });
-    }
+    final token = await getDeviceToken();
+    setState(() {
+      _deviceToken = token;
+    });
     log("Empty device token.");
   }
 

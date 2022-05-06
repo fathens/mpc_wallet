@@ -1,7 +1,19 @@
+import 'dart:developer';
+
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert' show Encoding, json;
 
 final _postUrl = Uri.parse('https://fcm.googleapis.com/fcm/send');
+
+Future<String> getDeviceToken() async {
+  String? token;
+  while (token == null) {
+    log("Getting device token of Firebase....");
+    token = await FirebaseMessaging.instance.getToken();
+  }
+  return token;
+}
 
 class PostFCM {
   static const _serverKey =
