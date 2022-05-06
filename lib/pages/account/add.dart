@@ -6,6 +6,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:mpc_wallet/main.dart';
 import 'package:mpc_wallet/model/account_keyword.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:provider/provider.dart';
 
 var _accountAdding = AccountAdding();
 
@@ -413,13 +414,15 @@ class KeyCreatedPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final condition = Provider.of<AppCondition>(context);
+
     void _goHome() {
       Navigator.popUntil(context, (route) {
         return route.settings.name == "/";
       });
       _joined = false;
       _created = false;
-      mainAccounts.add(_account);
+      condition.addAccount(_account);
     }
 
     return Scaffold(

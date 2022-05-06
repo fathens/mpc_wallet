@@ -5,8 +5,7 @@ import 'package:mpc_wallet/pages/account/add.dart';
 import 'package:mpc_wallet/pages/sample/messaging.dart';
 import 'package:mpc_wallet/pages/sample/rustuse.dart';
 import 'package:mpc_wallet/util/fcm.dart';
-
-List<String> mainAccounts = List.empty(growable: true);
+import 'package:provider/provider.dart';
 
 Future<void> main() async {
   log("Launching MPC Wallet...");
@@ -15,7 +14,10 @@ Future<void> main() async {
 
   await initFirebase();
 
-  runApp(const MyApp());
+  runApp(ChangeNotifierProvider(
+    create: (_) => AppCondition(),
+    child: const MyApp(),
+  ));
 }
 
 class MyApp extends StatelessWidget {
@@ -38,6 +40,17 @@ class MyApp extends StatelessWidget {
   }
 }
 
+class AppCondition with ChangeNotifier {
+  final List<String> accounts = List.empty(growable: true);
+
+  AppCondition();
+
+  void addAccount(String addr) {
+    accounts.add(addr);
+    notifyListeners();
+  }
+}
+
 class AccountListPage extends StatefulWidget {
   final String title;
 
@@ -53,13 +66,13 @@ class _AccountListPageState extends State<AccountListPage> {
     super.initState();
   }
 
+  final menuItemNames = {
+    "Messaging": "/messaging",
+    "Calc": "/calc",
+  };
+
   @override
   Widget build(BuildContext context) {
-    final menuItemNames = {
-      "Messaging": "/messaging",
-      "Calc": "/calc",
-    };
-
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
@@ -81,7 +94,7 @@ class _AccountListPageState extends State<AccountListPage> {
       ),
       body: Center(
         child: ListView(
-          children: mainAccounts.map((account) {
+          children: Provider.of<AppCondition>(context).accounts.map((account) {
             return ListTile(
               leading: const Icon(Icons.send),
               title: Text(account),
