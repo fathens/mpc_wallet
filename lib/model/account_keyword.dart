@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
 
-import 'package:mpc_wallet/util/fcm.dart';
+import 'package:mpc_wallet/fcm/facade.dart';
 
 class AccountAdding {
   String name = "";

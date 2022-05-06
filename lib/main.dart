@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:mpc_wallet/pages/account/add.dart';
 import 'package:mpc_wallet/pages/sample/messaging.dart';
 import 'package:mpc_wallet/pages/sample/rustuse.dart';
-import 'package:mpc_wallet/util/fcm.dart';
+import 'package:mpc_wallet/fcm/facade.dart';
 import 'package:provider/provider.dart';
 
 Future<void> main() async {
