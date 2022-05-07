@@ -5,9 +5,9 @@ class EventLister {
   void addEventLister(void Function(dynamic e) listen) {
     const nav = ServiceWorkerContainer.messageEvent;
     log("navigator: $nav");
-    nav.forTarget(null).listen((event) {
-      listen(event);
-    });
+    // nav.forTarget(null).listen((event) {
+    //   listen(event);
+    // });
   }
 }
 
