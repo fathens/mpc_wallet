@@ -6,6 +6,10 @@ import 'dart:convert' show Encoding, json;
 import 'package:firebase_core/firebase_core.dart';
 import 'package:mpc_wallet/firebase_options.dart';
 
+import 'mobile.dart' if (dart.library.html) 'web.dart' as fcmListener;
+
+late final listener = fcmListener.listner;
+
 final _postUrl = Uri.parse('https://fcm.googleapis.com/fcm/send');
 
 Future<void> initFirebase() async {
@@ -33,6 +37,10 @@ Future<String> getDeviceToken() async {
     token = await FirebaseMessaging.instance.getToken();
   }
   return token;
+}
+
+void addEventLister(void Function(dynamic e) listen) {
+  listener.addEventLister(listen);
 }
 
 class PostFCM {

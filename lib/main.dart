@@ -43,7 +43,11 @@ class MyApp extends StatelessWidget {
 class AppCondition with ChangeNotifier {
   final List<String> accounts = List.empty(growable: true);
 
-  AppCondition();
+  AppCondition() {
+    addEventLister((event) {
+      log("Get Event: $event");
+    });
+  }
 
   void addAccount(String addr) {
     accounts.add(addr);

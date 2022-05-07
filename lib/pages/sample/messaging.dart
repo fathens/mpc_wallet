@@ -57,14 +57,7 @@ class _MessagingPageState extends State<MessagingPage> {
   }
 
   void _startToListen() async {
-    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      final notification = message.notification;
-      log("Received: ${message.category}: ${notification?.title}: ${notification?.body}");
-
-      if (notification != null) {
-        _getNotify(notification);
-      }
-    });
+    addEventLister((e) => _getNotify(e));
   }
 
   void _sendMessage() async {
@@ -87,18 +80,25 @@ class _MessagingPageState extends State<MessagingPage> {
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      body: Center(
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            const Text("ME"),
+            const Text("ME", style: TextStyle(fontWeight: FontWeight.bold)),
             SelectableText(_deviceToken),
-            const Spacer(),
-            const Text("Destination"),
-            TextField(onChanged: (text) {
-              _destinationDevice = text;
-            }),
-            const Spacer(),
+            const Padding(padding: EdgeInsets.fromLTRB(0, 50, 0, 0)),
+            const Text("Destination", style: TextStyle(fontWeight: FontWeight.bold)),
+            TextField(
+              onChanged: (text) {
+                _destinationDevice = text;
+              },
+              decoration: const InputDecoration(
+                border: OutlineInputBorder(),
+              ),
+              maxLines: null,
+            ),
+            const Padding(padding: EdgeInsets.fromLTRB(0, 20, 0, 0)),
             const Text("Message Title"),
             TextField(onChanged: (text) {
               _messageTitle = text;
@@ -107,7 +107,6 @@ class _MessagingPageState extends State<MessagingPage> {
             TextField(onChanged: (text) {
               _messageBody = text;
             }),
-            const Spacer(),
           ],
         ),
       ),
