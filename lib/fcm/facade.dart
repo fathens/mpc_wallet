@@ -1,7 +1,47 @@
+import 'dart:developer';
+
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert' show Encoding, json;
+import 'package:firebase_core/firebase_core.dart';
+import 'package:mpc_wallet/firebase_options.dart';
+
+import 'mobile.dart' if (dart.library.html) 'web.dart' as fcmListener;
+
+late final listener = fcmListener.listner;
 
 final _postUrl = Uri.parse('https://fcm.googleapis.com/fcm/send');
+
+Future<void> initFirebase() async {
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
+  log("Loading FirebaseMessaging...");
+  final settings = await FirebaseMessaging.instance.requestPermission(
+    alert: true,
+    announcement: false,
+    badge: true,
+    carPlay: false,
+    criticalAlert: false,
+    provisional: false,
+    sound: true,
+  );
+  log("Loaded FirebaseMessaging: $settings");
+}
+
+Future<String> getDeviceToken() async {
+  String? token;
+  while (token == null) {
+    log("Getting device token of Firebase....");
+    token = await FirebaseMessaging.instance.getToken();
+  }
+  return token;
+}
+
+void addEventLister(void Function(dynamic e) listen) {
+  listener.addEventLister(listen);
+}
 
 class PostFCM {
   static const _serverKey =
