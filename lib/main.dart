@@ -110,7 +110,7 @@ class _AccountListPageState extends State<AccountListPage> {
       floatingActionButton: FloatingActionButton(
         key: const Key('add'),
         onPressed: _goAccountAdd,
-        tooltip: 'Send',
+        tooltip: 'Add',
         child: const Icon(Icons.add),
       ),
     );

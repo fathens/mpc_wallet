@@ -103,9 +103,9 @@ class _GenKeyEnterNamePageState extends State<GenKeyEnterNamePage> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        key: const Key('send'),
+        key: const Key('next'),
         onPressed: _goEnterMN,
-        tooltip: 'Send',
+        tooltip: 'Next',
         child: const Icon(Icons.arrow_forward),
       ),
     );
@@ -180,9 +180,9 @@ class _GenKeyEnterMNPageState extends State<GenKeyEnterMNPage> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        key: const Key('send'),
+        key: const Key('next'),
         onPressed: _goConfirm,
-        tooltip: 'Send',
+        tooltip: 'Next',
         child: const Icon(Icons.arrow_forward),
       ),
     );
@@ -240,9 +240,9 @@ class GenKeyConfirmPage extends StatelessWidget {
             ],
           )),
       floatingActionButton: FloatingActionButton(
-        key: const Key('send'),
+        key: const Key('next'),
         onPressed: _goGenerate,
-        tooltip: 'Send',
+        tooltip: 'Next',
         child: const Icon(Icons.arrow_forward),
       ),
     );
@@ -295,7 +295,7 @@ class WaitMembersJoinPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Timer(const Duration(seconds: 3), () {
+    Timer(const Duration(seconds: 10), () {
       if (_joined) {
         log("Already joined");
       } else {
@@ -355,7 +355,6 @@ class MembersJoinedPage extends StatelessWidget {
                 children: const [
                   Text("Kunio [iMac] (me)"),
                   Text("Nick [Galaxy]"),
-                  Text("Kacy [Pixel]"),
                 ],
               ),
               const Spacer(),
@@ -363,9 +362,9 @@ class MembersJoinedPage extends StatelessWidget {
             ],
           )),
       floatingActionButton: FloatingActionButton(
-        key: const Key('send'),
+        key: const Key('next'),
         onPressed: _goCreateKey,
-        tooltip: 'Send',
+        tooltip: 'Next',
         child: const Icon(Icons.arrow_forward),
       ),
     );
@@ -379,7 +378,7 @@ class WaitKeyCreatedPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Timer(const Duration(seconds: 3), () {
+    Timer(const Duration(seconds: 10), () {
       if (_created) {
         log("Already created");
       } else {
@@ -471,9 +470,9 @@ class KeyCreatedPage extends StatelessWidget {
             ],
           )),
       floatingActionButton: FloatingActionButton(
-        key: const Key('send'),
+        key: const Key('home'),
         onPressed: _goHome,
-        tooltip: 'Send',
+        tooltip: 'Home',
         child: const Icon(Icons.home),
       ),
     );
@@ -512,9 +511,12 @@ class _EnterKeywordPageState extends State<EnterKeywordPage> {
           children: [
             const Spacer(),
             const Text("Enter shared keyword"),
-            TextField(onChanged: (text) {
-              _keyword = text;
-            }),
+            TextField(
+              onChanged: (text) {
+                _keyword = text;
+              },
+              maxLines: null,
+            ),
             const Spacer(),
           ],
         ),
@@ -522,7 +524,7 @@ class _EnterKeywordPageState extends State<EnterKeywordPage> {
       floatingActionButton: FloatingActionButton(
         key: const Key('confirm'),
         onPressed: _goConfirm,
-        tooltip: 'Send',
+        tooltip: 'Confirm',
         child: const Icon(Icons.arrow_forward),
       ),
     );
@@ -570,7 +572,7 @@ class ConfirmKeyDetail extends StatelessWidget {
       floatingActionButton: FloatingActionButton(
         key: const Key('confirm'),
         onPressed: _goWaitAccount,
-        tooltip: 'Send',
+        tooltip: 'Confirm',
         child: const Icon(Icons.arrow_forward),
       ),
     );
@@ -584,7 +586,7 @@ class WaitAccountCreatedPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Timer(const Duration(seconds: 3), () {
+    Timer(const Duration(seconds: 30), () {
       if (_accountCreated) {
         log("Already created");
       } else {
