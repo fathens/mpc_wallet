@@ -107,7 +107,7 @@ class _MessagingPageState extends State<MessagingPage> {
                       _deviceTextField.clear();
                       _destinationDevice = "";
                     }),
-                child: Text("Clear")),
+                child: const Text("Clear")),
             const Padding(padding: EdgeInsets.fromLTRB(0, 20, 0, 0)),
             const Text("Message Title"),
             TextField(onChanged: (text) {
