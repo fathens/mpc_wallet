@@ -74,6 +74,8 @@ class _MessagingPageState extends State<MessagingPage> {
     _startToListen();
   }
 
+  final _deviceTextField = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -88,8 +90,10 @@ class _MessagingPageState extends State<MessagingPage> {
             const Text("ME", style: TextStyle(fontWeight: FontWeight.bold)),
             SelectableText(_deviceToken),
             const Padding(padding: EdgeInsets.fromLTRB(0, 50, 0, 0)),
-            const Text("Destination", style: TextStyle(fontWeight: FontWeight.bold)),
+            const Text("Destination",
+                style: TextStyle(fontWeight: FontWeight.bold)),
             TextField(
+              controller: _deviceTextField,
               onChanged: (text) {
                 _destinationDevice = text;
               },
@@ -98,6 +102,12 @@ class _MessagingPageState extends State<MessagingPage> {
               ),
               maxLines: null,
             ),
+            ElevatedButton(
+                onPressed: () => setState(() {
+                      _deviceTextField.clear();
+                      _destinationDevice = "";
+                    }),
+                child: const Text("Clear")),
             const Padding(padding: EdgeInsets.fromLTRB(0, 20, 0, 0)),
             const Text("Message Title"),
             TextField(onChanged: (text) {
