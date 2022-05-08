@@ -16,4 +16,14 @@ const messaging = firebase.messaging();
 // Optional:
 messaging.onBackgroundMessage((m) => {
   console.log("onBackgroundMessage", m);
+  options = {
+    "includeUncontrolled": true
+  };
+  console.log("Searching clients", options);
+  self.clients.matchAll(options).then(clientList => {
+    clientList.map(client => {
+      console.log("Posting message to ", client);
+      client.postMessage(m);
+    });
+  });
 });
