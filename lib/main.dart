@@ -44,7 +44,7 @@ class AppCondition with ChangeNotifier {
   final List<String> accounts = List.empty(growable: true);
 
   AppCondition() {
-    addEventLister((event) {
+    addEventListener((event) {
       log("Get Event: $event");
     });
   }

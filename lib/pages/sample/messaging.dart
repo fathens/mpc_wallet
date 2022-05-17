@@ -57,7 +57,7 @@ class _MessagingPageState extends State<MessagingPage> {
   }
 
   void _startToListen() async {
-    addEventLister((e) => _getNotify(e));
+    addEventListener((e) => _getNotify(e));
   }
 
   void _sendMessage() async {

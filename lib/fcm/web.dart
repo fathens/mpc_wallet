@@ -1,8 +1,8 @@
 import 'dart:developer';
 import 'dart:html' as html;
 
-class EventLister {
-  void addEventLister(void Function(dynamic e) listen) {
+class EventListener {
+  void addEventListener(void Function(dynamic e) listen) {
     html.window.navigator.serviceWorker?.addEventListener("message", (event) {
       log("Event from ServiceWorker: $event");
       listen(event);
@@ -11,4 +11,4 @@ class EventLister {
   }
 }
 
-late final listner = EventLister();
+late final listener = EventListener();
