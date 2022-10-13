@@ -8,7 +8,7 @@ import 'package:mpc_wallet/firebase_options.dart';
 
 import 'mobile.dart' if (dart.library.html) 'web.dart' as fcmListener;
 
-late final listener = fcmListener.listner;
+late final listener = fcmListener.listener;
 
 final _postUrl = Uri.parse('https://fcm.googleapis.com/fcm/send');
 
@@ -39,8 +39,8 @@ Future<String> getDeviceToken() async {
   return token;
 }
 
-void addEventLister(void Function(dynamic e) listen) {
-  listener.addEventLister(listen);
+void addEventListener(void Function(dynamic e) listen) {
+  listener.addEventListener(listen);
 }
 
 class PostFCM {

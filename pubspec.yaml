@@ -40,8 +40,9 @@ dependencies:
   cupertino_icons: ^1.0.2
   firebase_messaging: ^11.2.15
   http: ^0.13.4
-  flutter_rust_bridge: ^1.28.1
+  flutter_rust_bridge: ^1.49.0
   freezed_annotation: ^2.0.1
+  walletconnect_dart: ^0.0.11
 
 dev_dependencies:
   flutter_test:

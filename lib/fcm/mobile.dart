@@ -1,8 +1,8 @@
 import 'dart:developer';
 import 'package:firebase_messaging/firebase_messaging.dart';
 
-class EventLister {
-  void addEventLister(void Function(dynamic e) listen) {
+class EventListener {
+  void addEventListener(void Function(dynamic e) listen) {
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       final notification = message.notification;
       log("Received: ${message.category}: ${notification?.title}: ${notification
@@ -15,4 +15,4 @@ class EventLister {
   }
 }
 
-late final listner = EventLister();
+late final listener = EventListener();
