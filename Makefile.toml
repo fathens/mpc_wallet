@@ -3,21 +3,13 @@ skip_core_tasks = true
 
 [tasks.build]
 description = "Build All"
-dependencies = ["build-chrome_extension"]
+dependencies = ["build-web"]
 
-[tasks.build-chrome_extension]
+[tasks.build-web]
 dependencies = ["prepare-web"]
 script = [
     '''
     flutter build web --web-renderer html --csp
-
-    for src in build/web/*.js
-    do
-        dst=${src}.replaced
-        cat $src | sed 's/https:\/\/www\.gstatic\.com/generated/g' > $dst
-        diff $src $dst || echo ""
-        mv -vf $dst $src
-    done
     '''
 ]
 
@@ -30,23 +22,7 @@ script = [
 ]
 
 [tasks.prepare-web]
-dependencies = ["download-firebasejs", "copy-wasm-web"]
-
-[tasks.download-firebasejs]
-script = [
-    '''
-    version="8.10.1"
-    dstdir="web/generated/firebasejs/$version"
-    mkdir -pv $dstdir
-    for mod in "app" "messaging"
-    do
-        url="https://www.gstatic.com/firebasejs/${version}/firebase-${mod}.js"
-        target=$dstdir/$(basename $url)
-        echo "Downloading $url -> $target"
-        [ -f $target ] || curl -o $target -L $url
-    done
-    '''
-]
+dependencies = ["copy-wasm-web"]
 
 [tasks.copy-wasm-web]
 dependencies = ["build-wasm"]
@@ -71,7 +47,7 @@ script = [
     dst=${src}.next
     awk -f - $src > $dst <<'EOF'
     BEGIN { PUT=0; IN=0 }
-    /function init/ { sub("input", ""); print $0; PUT=1; IN=1 }
+    /function init\(input\)/ { sub("input", ""); print $0; PUT=1; IN=1 }
     /input = new URL/ { print "    input = 'generated/wasmlib/wasmlib_bg.wasm';" }
     / +}$/ { if (IN == 1) { IN=0 } }
     /.*/ { if (PUT == 0) { print $0 } else { if (IN == 0) { PUT=0 } } }
