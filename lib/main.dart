@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:mpc_wallet/pages/account/add.dart';
 import 'package:mpc_wallet/pages/sample/messaging.dart';
 import 'package:mpc_wallet/pages/sample/rustuse.dart';
+import 'package:mpc_wallet/pages/sample/wallet_connect.dart';
 import 'package:mpc_wallet/fcm/facade.dart';
 import 'package:provider/provider.dart';
 
@@ -33,6 +34,7 @@ class MyApp extends StatelessWidget {
       ),
       home: const AccountListPage(title: 'MPC Wallet'),
       routes: {
+        "/wallet_connect": (context) => const WalletConnectPage(),
         "/messaging": (context) => const MessagingPage(),
         "/calc": (context) => const RustCalcPage(),
       },
@@ -71,6 +73,7 @@ class _AccountListPageState extends State<AccountListPage> {
   }
 
   final menuItemNames = {
+    "WalletConnect": "/wallet_connect",
     "Messaging": "/messaging",
     "Calc": "/calc",
   };
