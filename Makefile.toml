@@ -9,7 +9,7 @@ dependencies = ["build-web"]
 dependencies = ["prepare-web"]
 script = [
     '''
-    flutter build web --web-renderer html --csp
+    flutter build web --web-renderer html
     '''
 ]
 
