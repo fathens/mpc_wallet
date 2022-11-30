@@ -11,14 +11,14 @@ crate-type = ["cdylib", "rlib"]
 default = ["console_error_panic_hook"]
 
 [dependencies]
-flutter_rust_bridge = "1"
-wasm-bindgen = "0.2.63"
+flutter_rust_bridge = "1.51.0"
+wasm-bindgen = { version = "0.2.83", features = ["serde-serialize"] }
 
 # The `console_error_panic_hook` crate provides better debugging of panics by
 # logging them with `console.error`. This is great for development, but requires
 # all the `std::fmt` and `std::panicking` infrastructure, so isn't great for
 # code size when deploying.
-console_error_panic_hook = { version = "0.1.6", optional = true }
+console_error_panic_hook = { version = "0.1.7", optional = true }
 
 # `wee_alloc` is a tiny allocator for wasm that is only ~1K in code size
 # compared to the default allocator's ~10K. It is slower than the default
@@ -27,37 +27,22 @@ console_error_panic_hook = { version = "0.1.6", optional = true }
 # Unfortunately, `wee_alloc` requires nightly Rust when targeting wasm for now.
 wee_alloc = { version = "0.4.5", optional = true }
 
-subtle = { version = "2" }
-serde = { version = "1.0", features = ["derive"] }
-serde_bytes = "0.11"
-zeroize = "1"
-thiserror = "1.0.23"
-derivative = "2"
-sha2 = "0.9"
-getrandom = { version = "0.2", features = ["js"] }
-digest = { version = "0.10" }
-typenum = "1.15"
-generic-array = "0.14"
-rand = "0.7"
-num-traits = "0.2"
-num-integer = "0.1"
-lazy_static = "1.4"
+mpc-ecdsa-wasm = {path = "libs/gg20", version = "*"}
+
+serde = { version = "1.0.148", features = ["derive"] }
+serde_bytes = "0.11.7"
+num-traits = "0.2.15"
+num-integer = "0.1.45"
+lazy_static = "1.4.0"
 
 [dev-dependencies]
-wasm-bindgen-test = "0.3.13"
-criterion = "0.3"
-aes-gcm = "0.9.4"
-hex = "0.4"
-futures = "0.3"
-reqwest = { version = "0.9", default-features = false }
-uuid = { version = "0.8", features = ["v4"] }
-serde_json = "1.0"
-rand = "0.8"
-surf = "2"
-anyhow = "1"
-structopt = "0.3"
-secp256k1 = { version = "0.24", features = ["rand-std"]}
-thiserror = "1.0.23"
+wasm-bindgen-test = "0.3.33"
+uuid = { version = "1.2.2", features = ["v4"] }
+serde_json = "1.0.89"
+
+proptest = "1.0.0"
+proptest-derive = "0.3.0"
+serde_test = "1.0.148"
 
 [profile.release]
 # Tell `rustc` to optimize for small code size.
