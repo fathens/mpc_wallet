@@ -63,6 +63,8 @@ dependencies = ["install-wasm-pack", "codegen-bridge"]
 script = [
     '''
     cd wasmlib
+    export AR=/usr/local/opt/llvm/bin/llvm-ar
+    export CC=/usr/local/opt/llvm/bin/clang
     wasm-pack build --target web
     '''
 ]
