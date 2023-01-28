@@ -30,6 +30,7 @@
 .pub-cache/
 .pub/
 /build/
+bridge_generated.*
 
 # Web related
 
