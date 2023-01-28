@@ -35,26 +35,6 @@ script = [
     do
         cp -vf wasmlib/pkg/*.$ext $dir/
     done
-    for src in $(find $dir -name '*.js')
-    do
-        dst=${src}.sed
-        cat $src | sed 's/export default init;//' | sed 's/^export //' > $dst
-        diff $src $dst || echo ""
-        mv -vf $dst $src
-    done
-
-    src=$dir/wasmlib.js
-    dst=${src}.next
-    awk -f - $src > $dst <<'EOF'
-    BEGIN { PUT=0; IN=0 }
-    /function init\(input\)/ { sub("input", ""); print $0; PUT=1; IN=1 }
-    /input = new URL/ { print "    input = 'generated/wasmlib/wasmlib_bg.wasm';" }
-    / +}$/ { if (IN == 1) { IN=0 } }
-    /.*/ { if (PUT == 0) { print $0 } else { if (IN == 0) { PUT=0 } } }
-EOF
-
-    diff $src $dst || echo ""
-    mv -vf $dst $src
     '''
 ]
 
@@ -83,8 +63,8 @@ script = [
     cargo install cargo-ndk cbindgen
 
     flutter_rust_bridge_codegen \
-        -r wasmlib/src/api.rs \
-        -d lib/bridge_generated.dart
+        --rust-input wasmlib/src/api.rs \
+        --dart-output lib/bridge_generated.dart
 
     flutter pub run build_runner build
     '''
