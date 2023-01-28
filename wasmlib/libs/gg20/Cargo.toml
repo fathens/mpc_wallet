@@ -2,7 +2,7 @@
 name = "mpc-ecdsa-wasm"
 version = "0.2.0"
 edition = "2021"
-license = "MIT"
+license = "GPL"
 description = "Webassembly bindings to multi-party-ecdsa"
 
 [lib]
