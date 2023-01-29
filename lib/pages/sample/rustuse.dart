@@ -1,7 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:mpc_wallet/wasmlib/facade.dart';
+import 'package:mpc_wallet/wasmlib/bridge_api.dart';
 
 class RustCalcPage extends StatefulWidget {
   final title = "Calc by Rust";
@@ -16,7 +16,7 @@ class _RustCalcPageState extends State<RustCalcPage> {
   String _addedValue = "0";
 
   void _calcAdd() async {
-    final c = await wasmApi.calcAdd(a: 1, b: 2);
+    final c = await api.calcAdd(a: 1, b: 2);
     log("Calc ADD: 1 + 2 = $c");
     setState(() {
       _addedValue = "1 + 2 = $c";

@@ -57,16 +57,30 @@ script = [
 ]
 
 [tasks.codegen-bridge]
-dependencies = ["install-flutter_rust_bridge", "flutter-get"]
+dependencies = ["install-flutter_rust_bridge", "flutter-get", "clean-codegen-bridge"]
 script = [
     '''
     cargo install cargo-ndk cbindgen
 
     flutter_rust_bridge_codegen \
         --rust-input wasmlib/src/api.rs \
-        --dart-output lib/bridge_generated.dart
+        --dart-output lib/bridge_generated.dart \
+        --dart-decl-output lib/bridge_generated.definitions.dart \
+        --wasm \
+        --verbose
 
     flutter pub run build_runner build
+    '''
+]
+
+[tasks.clean-codegen-bridge]
+dependencies = ["install-flutter_rust_bridge", "flutter-get"]
+script = [
+    '''
+    for file in $(find . -name 'bridge_generated.*')
+    do
+        rm -vf $file
+    done
     '''
 ]
 
@@ -80,7 +94,7 @@ script = [
 [tasks.install-flutter_rust_bridge]
 script = [
     '''
-    cargo install flutter_rust_bridge_codegen
+    cargo install flutter_rust_bridge_codegen --version 1.62.0
     dart pub global activate ffigen
     '''
 ]
