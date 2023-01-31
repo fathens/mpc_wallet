@@ -5,11 +5,19 @@ skip_core_tasks = true
 description = "Build All"
 dependencies = ["build-web"]
 
+[tasks.run-web]
+dependencies = ["build-web"]
+script = [
+    '''
+    flutter run -d chrome --web-renderer html
+    '''
+]
+
 [tasks.build-web]
 dependencies = ["prepare-web"]
 script = [
     '''
-    flutter build web --web-renderer html
+    flutter build web --web-renderer html --csp
     '''
 ]
 
