@@ -3,23 +3,7 @@ skip_core_tasks = true
 
 [tasks.build]
 description = "Build All"
-dependencies = ["build-web"]
-
-[tasks.run-web]
-dependencies = ["build-web"]
-script = [
-    '''
-    flutter run -d chrome --web-renderer html
-    '''
-]
-
-[tasks.build-web]
-dependencies = ["prepare-web"]
-script = [
-    '''
-    flutter build web --web-renderer html --csp
-    '''
-]
+dependencies = ["build-android"]
 
 [tasks.build-android]
 dependencies = ["codegen-bridge"]
@@ -29,38 +13,14 @@ script = [
     '''
 ]
 
-[tasks.prepare-web]
-dependencies = ["copy-wasm-web"]
-
-[tasks.copy-wasm-web]
-dependencies = ["build-wasm"]
-script = [
-    '''
-    dir="web/generated/wasmlib"
-    rm -rf $dir
-    mkdir -pv $dir
-    for ext in js wasm
-    do
-        cp -vf wasmlib/pkg/*.$ext $dir/
-    done
-    '''
-]
-
-[tasks.build-wasm]
-dependencies = ["install-wasm-pack", "codegen-bridge"]
+[tasks.build-rust]
+dependencies = ["codegen-bridge"]
 script = [
     '''
     cd wasmlib
     export AR=/usr/local/opt/llvm/bin/llvm-ar
     export CC=/usr/local/opt/llvm/bin/clang
     wasm-pack build --target web
-    '''
-]
-
-[tasks.install-wasm-pack]
-script = [
-    '''
-    type wasm-pack || (curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh)
     '''
 ]
 
@@ -73,8 +33,6 @@ script = [
     flutter_rust_bridge_codegen \
         --rust-input wasmlib/src/api.rs \
         --dart-output lib/bridge_generated.dart \
-        --dart-decl-output lib/bridge_generated.definitions.dart \
-        --wasm \
         --verbose
 
     flutter pub run build_runner build
