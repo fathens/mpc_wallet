@@ -2,62 +2,9 @@ name: Build
 on: [push]
 
 env:
-  FLUTTER_VERSION: 2.10.5
+  FLUTTER_VERSION: 3.7.0
 
 jobs:
-  build-chrome_extension:
-    runs-on: ubuntu-20.04
-    steps:
-      - uses: actions/checkout@v2
-
-      - uses: actions-rs/toolchain@v1
-        with:
-          toolchain: stable
-
-      - uses: actions/cache@v3
-        with:
-          path: |
-            ~/.cargo/bin
-            ~/.cargo/.crates2.json
-            ~/.cargo/.crates.toml
-            ~/.cargo/git
-            ~/.cargo/registry
-            ./target
-          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
-
-      - name: flutter cache
-        uses: subosito/flutter-action@v2
-        with:
-          flutter-version: ${{ env.FLUTTER_VERSION }}
-          channel: "stable"
-          cache: true
-          cache-key: flutter
-          cache-path: ${{ runner.tool_cache }}/flutter
-
-      - name: install Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          flutter-version: ${{ env.FLUTTER_VERSION }}
-          channel: "stable"
-
-      - name: Install makers
-        run: type makers || cargo install cargo-make
-
-      - name: Install LLVM
-        run: sudo apt-get install libclang-dev
-
-      - name: build
-        uses: actions-rs/cargo@v1
-        with:
-          command: make
-          args: build-web
-
-      - name: Archive
-        uses: actions/upload-artifact@v2
-        with:
-          name: web
-          path: build/web
-
   build-android:
     runs-on: ubuntu-20.04
     steps:

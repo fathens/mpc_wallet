@@ -6,14 +6,14 @@ description = "Build All"
 dependencies = ["build-android"]
 
 [tasks.build-android]
-dependencies = ["codegen-bridge"]
+dependencies = ["build-native"]
 script = [
     '''
     flutter build apk
     '''
 ]
 
-[tasks.build-rust]
+[tasks.build-native]
 dependencies = ["codegen-bridge"]
 script = [
     '''
