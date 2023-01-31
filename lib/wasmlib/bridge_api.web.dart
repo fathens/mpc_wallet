@@ -20,4 +20,4 @@ Future<WasmModule> _initModule() {
   });
 }
 
-final api = WasmlibImpl.wasm(_initModule());
+final api = NativelibImpl.wasm(_initModule());

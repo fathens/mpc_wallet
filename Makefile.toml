@@ -17,10 +17,8 @@ script = [
 dependencies = ["codegen-bridge"]
 script = [
     '''
-    cd wasmlib
-    export AR=/usr/local/opt/llvm/bin/llvm-ar
-    export CC=/usr/local/opt/llvm/bin/clang
-    wasm-pack build --target web
+    cd native
+    cargo build
     '''
 ]
 
@@ -31,7 +29,7 @@ script = [
     cargo install cargo-ndk cbindgen
 
     flutter_rust_bridge_codegen \
-        --rust-input wasmlib/src/api.rs \
+        --rust-input native/src/api.rs \
         --dart-output lib/bridge_generated.dart \
         --verbose
 

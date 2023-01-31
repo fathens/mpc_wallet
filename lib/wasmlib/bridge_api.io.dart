@@ -5,4 +5,4 @@ import 'package:mpc_wallet/bridge_generated.dart';
 const base = 'wasmlib';
 final path = Platform.isWindows ? '$base.dll' : 'lib$base.so';
 late final dylib = loadDylib(path);
-late final api = WasmlibImpl(dylib);
+late final api = NativelibImpl(dylib);
