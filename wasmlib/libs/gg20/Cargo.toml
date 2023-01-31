@@ -17,6 +17,8 @@ crate-type = ["cdylib", "rlib"]
 #sha3 = "0.10"
 #serde = {version = "1", features = ["derive"]}
 hex = "0.4"
+once_cell = "1.17"
+anyhow = "1.0"
 
 [dependencies.getrandom]
 default-features = false
@@ -27,7 +29,6 @@ version = "0.2"
 git = "https://github.com/fathens/multi-party-ecdsa"
 branch = "wasm"
 default-features = false
-version = "*"
 
 [dev-dependencies]
 wasm-bindgen-test = "0.3"
