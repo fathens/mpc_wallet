@@ -1,7 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:mpc_wallet/wasmlib/bridge_api.dart';
+import 'package:mpc_wallet/native/bridge_api.dart';
 
 class RustCalcPage extends StatefulWidget {
   final title = "Calc by Rust";
