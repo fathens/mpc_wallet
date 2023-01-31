@@ -50,12 +50,12 @@ jobs:
         uses: actions-rs/cargo@v1
         with:
           command: make
-          args: build-chrome_extension
+          args: build-web
 
       - name: Archive
         uses: actions/upload-artifact@v2
         with:
-          name: chrome-extension
+          name: web
           path: build/web
 
   build-android:

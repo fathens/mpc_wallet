@@ -1,4 +1,5 @@
 use wasm_bindgen::prelude::*;
+use mpc_ecdsa_wasm::keygen;
 
 // When the `wee_alloc` feature is enabled, use `wee_alloc` as the global
 // allocator.
@@ -19,4 +20,9 @@ pub fn greet() {
 #[wasm_bindgen]
 pub fn calc_add(a: i32, b: i32) -> i32 {
     return a + b;
+}
+
+#[wasm_bindgen]
+pub fn sample_key(a: i32, b: i32) -> i32 {
+    return keygen::start_keygen(a, b).unwrap();
 }
