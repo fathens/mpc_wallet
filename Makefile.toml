@@ -6,10 +6,30 @@ description = "Build All"
 dependencies = ["build-android"]
 
 [tasks.build-android]
-dependencies = ["build-native"]
+dependencies = ["prepare-android"]
 script = [
     '''
+    java -version # must be java 8, Zulu is recommended
     flutter build apk
+    '''
+]
+
+[tasks.prepare-android]
+dependencies = ["codegen-bridge"]
+script = [
+    '''
+    rustup target add \
+        aarch64-linux-android \
+        armv7-linux-androideabi \
+        x86_64-linux-android \
+        i686-linux-android
+
+    base="$ANDROID_NDK_HOME/toolchains/llvm/prebuilt/darwin-x86_64/lib64/clang/14.0.1/lib/linux"
+    for dir in $(ls -d $base/*/)
+    do
+        echo "working on $dir"
+        echo 'INPUT(-lunwind)' > $dir/libgcc.a
+    done
     '''
 ]
 
